@@ -4,9 +4,6 @@ import numpy as np
 def predict_next_value(timeseries, days_forward):
    
     x = create_timeline(len(timeseries))
-    # y = np.asarray(timeseries)
-    # y=y.reshape(-1,1)
-
 
     model = LinearRegression()
     model.fit(x, timeseries)
