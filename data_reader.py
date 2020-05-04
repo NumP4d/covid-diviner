@@ -13,6 +13,10 @@ def date_set_preparation(start_date, end_date):
         date_list.append(date_str)
     return date_list
 
+def test_date(date):
+    test_date = [date.strftime('%#m/%#d/%y')]
+    return test_date
+
 def read_covid_file(countries, date_list):
     filepath    = 'COVID-19/csse_covid_19_data/csse_covid_19_time_series/'
     filename    = 'time_series_covid19_confirmed_global.csv'
@@ -29,6 +33,7 @@ def read_covid_file(countries, date_list):
                 if not row['Province/State']:
                     for i in range(len(date_list)):
                         cases[country][i] = row[date_list[i]]
+                    cases[country] = cases[country].astype(np.int32)
     return cases
 
 def european_countries():
