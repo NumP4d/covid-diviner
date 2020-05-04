@@ -4,6 +4,7 @@ import numpy as np
 
 import data_reader
 import predictor
+import prediction_quality
 
 
 print('Hello mister! I\'m your diviner')
@@ -15,13 +16,25 @@ countries = data_reader.european_countries()
 start_date  = date(2020, 4, 12)
 end_date    = date(2020, 4, 26)
 
-date_list = data_reader.date_set_preparation(start_date, end_date)
+date_test   = data_reader.test_date(date(2020, 5, 3))
 
-covid_data = data_reader.read_covid_file(countries, date_list)
+date_list   = data_reader.date_set_preparation(start_date, end_date)
 
+covid_data  = data_reader.read_covid_file(countries, date_list)
+cases_t     = data_reader.read_covid_file(countries, date_test)
+
+print('Prediction:')
+cases_p = dict()
 for country in countries:
     print(country)
-    y = predictor.predict_next_value(covid_data[country], 7)
-    print(y)
+    cases_p[country] = predictor.predict_next_value(covid_data[country], 7)
+    print(cases_p[country])
+
+print('Prediction quality:')
+
+quality_poland  = prediction_quality.quality_country(cases_p['Poland'], cases_t['Poland'])
+quality_europe  = prediction_quality.quality_all(cases_p, cases_t)
+
+print('for Poland: ', quality_poland, '%, for Europe: ', quality_europe, '%')
 
 print("Done!")
