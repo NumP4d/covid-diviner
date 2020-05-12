@@ -28,6 +28,9 @@ cases_p = dict()
 for country in countries:
     print(country)
     cases_p[country] = predictor.predict_next_value(covid_data[country], 7)
+
+    tsting = predictor.predict_with_arma_model(covid_data[country],7)
+
     print(cases_p[country])
 
 print('Prediction quality:')
