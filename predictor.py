@@ -2,7 +2,7 @@ from sklearn.linear_model import LinearRegression
 from keras.models import Sequential
 from keras.layers import LSTM
 from keras.layers import Dense
-from random import random
+import random
 import numpy as np
 
 def predict_next_value(timeseries, days_forward):
@@ -44,15 +44,12 @@ def split_sequence(sequence, n_steps):
 def create_train_test_set(X, Y, probability_threshold):
     i_learn = []
     i_test  = []
+    random.seed(7)
     for i in range(len(Y)):
-        if random() < probability_threshold:
+        if random.random() < probability_threshold:
             i_learn.append(i)
         else:
             i_test.append(i)
-    #X_learn = [X[i] for i in i_learn]
-    #Y_learn = [Y[i] for i in i_learn]
-    #X_test  = [X[i] for i in i_test]
-    #Y_test  = [Y[i] for i in i_test]
     return X[i_learn], Y[i_learn], X[i_test], Y[i_test]
 
 # Create neural network model and train it
@@ -65,5 +62,5 @@ def lstm_model_create(n_neurons, n_steps, n_features):
     return model
 
 def lstm_model_train(model, X_learn, Y_learn):
-    model.fit(X_learn, Y_learn, epochs=200, verbose=0)
+    model.fit(X_learn, Y_learn, epochs=200)
     return model
