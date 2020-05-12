@@ -13,16 +13,17 @@ print('Hello mister! I\'m your diviner')
 countries = data_reader.european_countries()
 
 #analysed dates
-START_DATE  = date(2020, 4, 11)
+START_DATE  = date(2020, 3, 20)
 END_DATE    = date(2020, 5, 11)
 
 # Data set splitting for learn as 67%
 SET_SPLIT_THRESHOLD = 0.67
 
 # Model parameters
-N_STEPS     = 14
-N_FEATURES  = 1
-N_NEURONS   = 200
+N_STEPS_BACKWARDS   = 14
+N_STEPS_FORWARD     = 7
+N_FEATURES          = 1
+N_NEURONS           = 200
 
 date_list   = data_reader.date_set_preparation(START_DATE, END_DATE)
 
@@ -32,9 +33,9 @@ print('Prediction:')
 cases_p = dict()
 for country in countries:
     print(country)
-    X, Y = predictor.split_sequence(covid_data[country], N_STEPS)
+    X, Y = predictor.split_sequence(covid_data[country], N_STEPS_BACKWARDS, N_STEPS_FORWARD)
     X_learn, Y_learn, X_test, Y_test = predictor.create_train_test_set(X, Y, SET_SPLIT_THRESHOLD)
-    model = predictor.lstm_model_create(N_NEURONS, N_STEPS, N_FEATURES)
+    model = predictor.lstm_model_create(N_NEURONS, N_STEPS_BACKWARDS, N_FEATURES)
     X_learn = X_learn.reshape((X_learn.shape[0], X_learn.shape[1], N_FEATURES))
     model.fit(X_learn, Y_learn, epochs=200, verbose=0)
     X_test = X_test.reshape((X_test.shape[0], X_test.shape[1], N_FEATURES))

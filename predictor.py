@@ -27,16 +27,16 @@ def create_timeline(length):
     return X
 
 # split a univariate sequence into samples
-def split_sequence(sequence, n_steps):
+def split_sequence(sequence, n_steps_backward, n_steps_forward):
     X, Y = list(), list()
     for i in range(len(sequence)):
         # find the end of this pattern
-        end_ix = i + n_steps
+        end_ix = i + n_steps_backward + n_steps_forward - 1
         # check if we are beyond the sequence
         if end_ix > len(sequence)-1:
             break
         # gather input and output parts of the pattern
-        seq_x, seq_y = sequence[i:end_ix], sequence[end_ix]
+        seq_x, seq_y = sequence[i:(end_ix - (n_steps_forward -1))], sequence[end_ix]
         X.append(seq_x)
         Y.append(seq_y)
     return np.array(X), np.array(Y)
