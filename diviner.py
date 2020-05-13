@@ -27,9 +27,9 @@ cases_linear = dict()
 cases_poly = dict()
 for country in countries:
     print(country)
-    #cases_linear[country] = predictor.predict_poly_regression(covid_data[country], DAYS_FORWARD, 1)
-    cases_poly[country] = predictor.predict_poly_regression(covid_data[country], DAYS_FORWARD, 2)
-    #print(cases_linear[country])
-    print(cases_poly[country])
+    cases_linear[country] = predictor.predict_poly_regression(covid_data[country], DAYS_FORWARD, 1)
+    #cases_poly[country] = predictor.predict_poly_regression(covid_data[country], DAYS_FORWARD, 2)
+    print(cases_linear[country])
+    #print(cases_poly[country])
 
 print("Done!")
