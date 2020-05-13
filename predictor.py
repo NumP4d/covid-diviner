@@ -56,7 +56,13 @@ def create_train_test_set(X, Y, probability_threshold):
 def lstm_model_create(n_neurons, n_steps, n_features):
     # define model
     model = Sequential()
-    model.add(LSTM(n_neurons, activation='relu', input_shape=(n_steps, n_features)))
+    model.add(LSTM(n_neurons, activation='relu', return_sequences=True, input_shape=(n_steps, n_features)))
+    model.add(LSTM(n_neurons, activation='relu', return_sequences=True))
+    model.add(LSTM(n_neurons, activation='relu', return_sequences=True))
+    model.add(LSTM(n_neurons, activation='relu', return_sequences=True))
+    model.add(LSTM(n_neurons, activation='relu', return_sequences=True))
+    model.add(LSTM(n_neurons, activation='relu', return_sequences=True))
+    model.add(LSTM(n_neurons, activation='relu'))
     model.add(Dense(1))
     model.compile(optimizer='adam', loss='mse')
     return model
