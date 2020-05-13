@@ -9,12 +9,12 @@ def date_set_preparation(start_date, end_date):
     date_list = []
     for i in range(delta.days + 1):
         date        = start_date + timedelta(days=i)
-        date_str    = date.strftime('%#m/%#d/%y')
+        date_str    = date.strftime('%-m/%-d/%y')
         date_list.append(date_str)
     return date_list
 
 def test_date(date):
-    test_date = [date.strftime('%#m/%#d/%y')]
+    test_date = [date.strftime('%-m/%-d/%y')]
     return test_date
 
 def read_covid_file(countries, date_list):
