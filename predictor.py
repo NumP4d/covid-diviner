@@ -44,7 +44,7 @@ def split_sequence(sequence, n_steps_backward, n_steps_forward):
 def create_train_test_set(X, Y, probability_threshold):
     i_learn = []
     i_test  = []
-    random.seed(7)
+    #random.seed(7)
     for i in range(len(Y)):
         if random.random() < probability_threshold:
             i_learn.append(i)
@@ -57,11 +57,11 @@ def lstm_model_create(n_neurons, n_steps, n_features):
     # define model
     model = Sequential()
     model.add(LSTM(n_neurons, activation='relu', return_sequences=True, input_shape=(n_steps, n_features)))
-    model.add(LSTM(n_neurons, activation='relu', return_sequences=True))
-    model.add(LSTM(n_neurons, activation='relu', return_sequences=True))
-    model.add(LSTM(n_neurons, activation='relu', return_sequences=True))
-    model.add(LSTM(n_neurons, activation='relu', return_sequences=True))
-    model.add(LSTM(n_neurons, activation='relu', return_sequences=True))
+    #model.add(LSTM(n_neurons, activation='relu', return_sequences=True))
+    #model.add(LSTM(n_neurons, activation='relu', return_sequences=True))
+    #model.add(LSTM(n_neurons, activation='relu', return_sequences=True))
+    #model.add(LSTM(n_neurons, activation='relu', return_sequences=True))
+    #model.add(LSTM(n_neurons, activation='relu', return_sequences=True))
     model.add(LSTM(n_neurons, activation='relu'))
     model.add(Dense(1))
     model.compile(optimizer='adam', loss='mse')
