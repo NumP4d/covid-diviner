@@ -42,7 +42,7 @@ for country in countries:
     # Prepare model, train it and make test prediction
     model = predictor.lstm_model_create(N_NEURONS, N_STEPS_BACKWARDS, N_FEATURES, N_STEPS_FORWARD)
     X_learn = X_learn.reshape((X_learn.shape[0], X_learn.shape[1], N_FEATURES))
-    model.fit(X_learn, Y_learn, epochs=200)
+    model.fit(X_learn, Y_learn, epochs=400)
     X_test = X_test.reshape((X_test.shape[0], X_test.shape[1], N_FEATURES))
     Y_predict = model.predict(X_test, verbose=0)
 
@@ -79,6 +79,25 @@ for country in countries:
     for i in range(len(Y_predict)):
         MSE += ((Y_predict[i] - Y_test[i])**2)
     print("MSE for test set: ", MSE)
+
+    cases_for_linear = covid_data[country]
+    cases_for_linear = cases_for_linear[:-N_STEPS_FORWARD]
+
+    cases_t = covid_data[country]
+    cases_t = cases_t[-1] # last item
+
+    cases_p_linear = predictor.predict_next_value(cases_for_linear, N_STEPS_FORWARD)
+
+
+    cases_p_rnn = cases_for_linear[-1] + np.sum(Y_predict)
+
+    quality_rnn = prediction_quality.quality_country(cases_p_rnn, cases_t)
+
+    quality_linear = prediction_quality.quality_country(cases_p_linear, cases_t)
+
+    print('Prediction quality RNN:', quality_rnn)
+
+    print('Prediction quality linear:', quality_linear)
 
     #Y = Y_test
     #MSE = 0

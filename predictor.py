@@ -62,9 +62,10 @@ def lstm_model_create(n_neurons, n_steps, n_features, n_future):
     model = Sequential()
     model.add(LSTM(n_neurons, return_sequences=True, input_shape=(n_steps, n_features)))
     model.add(LSTM(second_layer_neurons, activation='relu'))
-    model.add(Dense(n_future, activation='relu'))
-    #model.compile(optimizer=RMSprop(clipvalue=1.0), loss='mae')
-    model.compile(optimizer='adam', loss='mse')
+    #model.add(Dense(n_future, activation='relu'))
+    model.add(Dense(n_future))
+    model.compile(optimizer=RMSprop(clipvalue=1.0), loss='mae')
+    #model.compile(optimizer='adam', loss='mse')
     return model
 
 def lstm_model_train(model, X_learn, Y_learn):
