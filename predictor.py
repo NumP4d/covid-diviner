@@ -2,6 +2,7 @@ from sklearn.linear_model import LinearRegression
 from keras.models import Sequential
 from keras.layers import LSTM
 from keras.layers import Dense
+from keras.optimizers import RMSprop
 import random
 import numpy as np
 
@@ -31,12 +32,13 @@ def split_sequence(sequence, n_steps_backward, n_steps_forward):
     X, Y = list(), list()
     for i in range(len(sequence)):
         # find the end of this pattern
-        end_ix = i + n_steps_backward + n_steps_forward - 1
+        end_ix = i + n_steps_backward + n_steps_forward
         # check if we are beyond the sequence
         if end_ix > len(sequence)-1:
             break
         # gather input and output parts of the pattern
-        seq_x, seq_y = sequence[i:(end_ix - (n_steps_forward -1))], sequence[end_ix]
+        seq_x = sequence[i:(end_ix - n_steps_forward)]
+        seq_y = sequence[(end_ix - n_steps_forward):end_ix]
         X.append(seq_x)
         Y.append(seq_y)
     return np.array(X), np.array(Y)
@@ -53,17 +55,15 @@ def create_train_test_set(X, Y, probability_threshold):
     return X[i_learn], Y[i_learn], X[i_test], Y[i_test]
 
 # Create neural network model and train it
-def lstm_model_create(n_neurons, n_steps, n_features):
+def lstm_model_create(n_neurons, n_steps, n_features, n_future):
+    second_layer_neurons = (n_neurons / 2)
+    second_layer_neurons = np.int32(second_layer_neurons)
     # define model
     model = Sequential()
-    model.add(LSTM(n_neurons, activation='relu', return_sequences=True, input_shape=(n_steps, n_features)))
-    #model.add(LSTM(n_neurons, activation='relu', return_sequences=True))
-    #model.add(LSTM(n_neurons, activation='relu', return_sequences=True))
-    #model.add(LSTM(n_neurons, activation='relu', return_sequences=True))
-    #model.add(LSTM(n_neurons, activation='relu', return_sequences=True))
-    #model.add(LSTM(n_neurons, activation='relu', return_sequences=True))
-    model.add(LSTM(n_neurons, activation='relu'))
-    model.add(Dense(1))
+    model.add(LSTM(n_neurons, return_sequences=True, input_shape=(n_steps, n_features)))
+    model.add(LSTM(second_layer_neurons, activation='relu'))
+    model.add(Dense(n_future, activation='relu'))
+    #model.compile(optimizer=RMSprop(clipvalue=1.0), loss='mae')
     model.compile(optimizer='adam', loss='mse')
     return model
 
