@@ -42,7 +42,7 @@ for country in countries:
     # Prepare model, train it and make test prediction
     model = predictor.lstm_model_create(N_NEURONS, N_STEPS_BACKWARDS, N_FEATURES, N_STEPS_FORWARD)
     X = X.reshape((X.shape[0], X.shape[1], N_FEATURES))
-    model.fit(X, Y, epochs=400)
+    model.fit(X, Y, epochs=200, verbose=0)
     # Data for prediction for future
     X_pred = np.array(dataset[-N_STEPS_BACKWARDS:])
     X_pred = X_pred.reshape((1, X_pred.shape[0], N_FEATURES))
@@ -75,16 +75,19 @@ for country in countries:
     for i in range(len(prediction)):
         pred_linear[i] = predictor.predict_next_value(dataset_linear, i + 1)
 
-    plt.plot(t1, dataset, 'b.')
-    plt.plot(t2, prediction, 'r.')
-    plt.plot(t2, pred_linear, 'g.')
-    plt.show()
-    dataset = np.diff(covid_data[country])
-    prediction = Y_predict
-    t1 = t1[1:]
-    plt.plot(t1, dataset, 'b.')
-    plt.plot(t2, prediction, 'r.')
-    plt.show()
+    #plt.plot(t1, dataset, 'b.')
+    #plt.plot(t2, prediction, 'r.')
+    #plt.plot(t2, pred_linear, 'g.')
+    #plt.show()
+    #dataset = np.diff(covid_data[country])
+    #prediction2 = Y_predict
+    #t1 = t1[1:]
+    #plt.plot(t1, dataset, 'b.')
+    #plt.plot(t2, prediction2, 'r.')
+    #plt.show()
+
+    print('Prediction CNN: ', prediction[-1])
+    print('Prediction linear: ', pred_linear[-1])
 
     #cases_for_linear = covid_data[country]
     #cases_for_linear = cases_for_linear[:-N_STEPS_FORWARD]
