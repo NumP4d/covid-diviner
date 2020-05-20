@@ -13,10 +13,10 @@ print('Hello mister! I\'m your diviner')
 countries = data_reader.european_countries()
 
 #analysed dates
-start_date  = date(2020, 4, 28)
-end_date    = date(2020, 5, 5)
+start_date  = date(2020, 5, 3)
+end_date    = date(2020, 5, 12)
 
-date_test   = data_reader.test_date(date(2020, 5, 12))
+date_test   = data_reader.test_date(date(2020, 5, 19))
 
 date_list   = data_reader.date_set_preparation(start_date, end_date)
 
