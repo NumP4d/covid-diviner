@@ -38,7 +38,7 @@ def read_covid_file(countries, date_list):
 
 def european_countries():
     #countries   = [ 'Poland']
-    countries = ['Poland']
+    countries = ['Italy']
     rest    = [ 'Albania',
                 'Andorra',
                 'Armenia',
