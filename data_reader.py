@@ -18,8 +18,18 @@ def test_date(date):
     return test_date
 
 def read_covid_file(countries, date_list):
+    filename_c  = 'time_series_covid19_confirmed_global.csv'
+    filename_d  = 'time_series_covid19_deaths_global.csv'
+    filename_r  = 'time_series_covid19_recovered_global.csv'
+
+    cases_c = _read_file(countries, date_list, filename_c)
+    cases_d = _read_file(countries, date_list, filename_d)
+    cases_r = _read_file(countries, date_list, filename_r)
+
+    return (cases_c, cases_d, cases_r)
+
+def _read_file(countries, date_list, filename):
     filepath    = 'COVID-19/csse_covid_19_data/csse_covid_19_time_series/'
-    filename    = 'time_series_covid19_confirmed_global.csv'
 
     cases = dict()
     for country in countries:
@@ -36,8 +46,8 @@ def read_covid_file(countries, date_list):
                     cases[country] = cases[country].astype(np.float32)
     return cases
 
+
 def european_countries():
-    #countries   = [ 'Poland']
     countries = ['Poland',
                 'Albania',
                 'Andorra',
@@ -87,4 +97,5 @@ def european_countries():
                 'Ukraine',
                 'United Kingdom',
                 'Holy See'      ]   # Vatican City
+    countries = ['Poland']
     return countries

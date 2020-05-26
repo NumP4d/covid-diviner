@@ -74,7 +74,7 @@ def lstm_model_create(n_neurons, n_steps, n_features, n_future):
     model.add(Conv1D(filters=64, kernel_size=2, activation='relu', input_shape=(n_steps, n_features)))
     model.add(MaxPooling1D(pool_size=2))
     model.add(Flatten())
-    model.add(Dense(50, activation='relu'))
+    model.add(Dense(300, activation='relu'))
     model.add(Dense(n_future))
     model.compile(optimizer='adam', loss='mse')
     return model
