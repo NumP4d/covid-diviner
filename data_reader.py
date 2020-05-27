@@ -97,5 +97,5 @@ def european_countries():
                 'Ukraine',
                 'United Kingdom',
                 'Holy See'      ]   # Vatican City
-    countries = ['Poland']
+    #countries = ['Poland']
     return countries

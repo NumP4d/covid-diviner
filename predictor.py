@@ -75,7 +75,7 @@ def lstm_model_create(n_neurons, n_steps, n_features, n_future):
     model.add(MaxPooling1D(pool_size=2))
     model.add(Flatten())
     model.add(Dense(300, activation='relu'))
-    model.add(Dense(n_future))
+    model.add(Dense(n_future, activation='softplus'))
     model.compile(optimizer='adam', loss='mse')
     return model
 
