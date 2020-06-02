@@ -48,11 +48,17 @@ countries = data_reader.european_countries()
 START_DATE  = date(2020, 2, 1)
 END_DATE    = date(2020, 5, 26)
 
+# Data set splitting for learn as 67%
+SET_SPLIT_THRESHOLD = 0.67
+
 # Model parameters
 N_STEPS_BACKWARDS   = 7
 N_STEPS_FORWARD     = 7
 N_FEATURES          = 6
 N_NEURONS           = 32
+
+# Monte carlo simulation and training
+N_MONTE_CARLO       = 1
 
 # Choose model
 model = 'neural_network'
@@ -62,61 +68,48 @@ date_list   = data_reader.date_set_preparation(START_DATE, END_DATE)
 
 (cases_c, cases_d, cases_r) = data_reader.read_covid_file(countries, date_list)
 
-# Dataset creation and splitting - all for training set
-(X_learn, Y_learn, X_test, Y_test)                              \
-    = predictor.create_countries_train_test_set                 \
-    (countries, cases_c, cases_d, cases_r, 1, \
-    N_STEPS_BACKWARDS, N_STEPS_FORWARD)
+mean_quality = 0
+for i in range(N_MONTE_CARLO):
+    print("Iteration ", i)
 
-if (model == 'neural_network'):
-    # Model creation and training
-    model = predictor.lstm_model_create(N_NEURONS, N_STEPS_BACKWARDS, N_FEATURES, N_STEPS_FORWARD)
-    model.fit(X_learn, Y_learn, epochs=200, verbose=1)
+    # Dataset creation and splitting
+    (X_learn, Y_learn, X_test, Y_test)                              \
+        = predictor.create_countries_train_test_set                 \
+        (countries, cases_c, cases_d, cases_r, SET_SPLIT_THRESHOLD, \
+        N_STEPS_BACKWARDS, N_STEPS_FORWARD)
 
-# Create set for prediction for future only
-X_predict = predictor.create_countries_predition_set            \
-    (countries, cases_c, cases_d, cases_r, N_STEPS_BACKWARDS)
-
-Y_predict   = dict()
-acc_predict = dict()
-for country in countries:
-    print(country)
-
-    # Model prediction for country
-    Y_predict[country] = model.predict(X_predict[country], verbose=0)
-    # Limit values in prediction
-    Y_predict[country] = Y_predict[country].clip(min=0)
+    if (model == 'neural_network'):
+        # Model creation, training and prediction for test sequence
+        model = predictor.lstm_model_create(N_NEURONS, N_STEPS_BACKWARDS, N_FEATURES, N_STEPS_FORWARD)
+        model.fit(X_learn, Y_learn, epochs=200, verbose=1)
+        Y_predict = model.predict(X_test, verbose=0)
+        # Limit values in prediction
+        Y_predict = Y_predict.clip(min=0)
+    elif (model == 'linear'):
+        timeseries = X_test[:, 3, :]
+        timeseries = timeseries.reshape(X_test.shape[0], X_test.shape[2], 1)
+        acc_predict = np.zeros(len(Y_test))
+        for i in range(len(acc_predict)):
+            acc_predict[i] = predictor.predict_next_value(timeseries[i], N_STEPS_FORWARD)
 
     # Translate prediction for absolute value 7 days in future (accumulated)
-    acc_predict[country] = predictor.translate_prediction   \
-        (X_predict[country], Y_predict[country])
+    if (model != 'linear'):
+        acc_predict = predictor.translate_prediction(X_test, Y_predict)
+    acc_test    = predictor.translate_prediction(X_test, Y_test)
 
     # Round accumulated prediction
-    acc_predict[country] = np.round(acc_predict[country])
+    acc_predict = np.round(acc_predict)
 
-    # Calculate prediction for future
-    last_value = X_predict[country][0, -1, 3]
-    prediction_points = np.zeros(N_STEPS_FORWARD)
-    Y_predict[country] = Y_predict[country].flatten()
-    for i in range(N_STEPS_FORWARD):
-        prediction_points[i] = last_value + Y_predict[country][i]
+    # Calculate quality index for model
+    quality = prediction_quality.calculate(acc_test, acc_predict)
 
-    # Plot prediction results
-    t1 = np.zeros_like(cases_c[country])
-    for i in range(len(cases_c[country])):
-        t1[i] = i
+    # Accumulate quality index
+    mean_quality += quality
 
-    t2 = np.zeros(len(Y_predict[country]))
-    t2[0] = t1[-1] + 1
-    for i in range(len(Y_predict[country])):
-        if i != 0:
-            t2[i] = t2[i - 1] + 1
 
-    # Plot results
-    plt.plot(t1, cases_c[country], 'b.')
-    plt.plot(t2, prediction_points, 'r.')
-    plt.show()
+# Calculate mean
+mean_quality /= N_MONTE_CARLO
 
-    print(acc_predict[country])
+print("Mean quality for model is calculated as ", mean_quality)
 
 print("Done!")

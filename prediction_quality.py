@@ -12,6 +12,28 @@ def quality_all(cases_p, cases_t):
     quality /= len(cases_p)
     return quality
 
+def mse(Y_real, Y_predict):
+    Y_real      = Y_real.flatten()
+    Y_predict   = Y_predict.flatten()
+    mse = 0
+    for i in range(Y_real.size):
+        mse += (Y_real[i] - Y_predict[i]) ** 2
+    mse /= Y_real.size
+
+    return mse
+
+def calculate(Y_real, Y_predict):
+    quality = 0
+    for i in range(len(Y_real)):
+        if (Y_real[i] != 0):
+            quality += np.absolute(Y_real[i] - Y_predict[i]) / Y_real[i]
+        else:
+            quality += np.absolute(Y_real[i] - Y_predict[i]) / 0.001
+    quality /= len(Y_real)
+    quality *= 100
+
+    return quality
+
 def quality_array(cases_p, cases_t):
     quality = 0
     weights = []
