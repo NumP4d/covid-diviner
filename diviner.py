@@ -15,7 +15,7 @@ countries = data_reader.european_countries()
 
 #analysed dates
 START_DATE  = date(2020, 4, 1)
-END_DATE    = date(2020, 5, 19)
+END_DATE    = date(2020, 6, 2)
 
 # Data set splitting for learn as 67%
 SET_SPLIT_THRESHOLD = 0.67
@@ -75,15 +75,15 @@ for country in countries:
     for i in range(len(prediction)):
         pred_linear[i] = predictor.predict_next_value(dataset_linear, i + 1)
 
-    #plt.plot(t1, dataset, 'b.')
-    #plt.plot(t2, prediction, 'r.')
-    #plt.plot(t2, pred_linear, 'g.')
+    plt.plot(t1, dataset, 'b.')
+    plt.plot(t2, prediction, 'r.')
+    plt.plot(t2, pred_linear, 'g.')
     #plt.show()
-    #dataset = np.diff(covid_data[country])
-    #prediction2 = Y_predict
-    #t1 = t1[1:]
-    #plt.plot(t1, dataset, 'b.')
-    #plt.plot(t2, prediction2, 'r.')
+    dataset = np.diff(covid_data[country])
+    prediction2 = Y_predict
+    t1 = t1[1:]
+    plt.plot(t1, dataset, 'b.')
+    plt.plot(t2, prediction2, 'r.')
     #plt.show()
 
     print('Prediction CNN: ', prediction[-1])
