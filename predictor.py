@@ -5,6 +5,8 @@ from keras.layers import Dense
 from keras.layers import Conv1D
 from keras.layers import MaxPooling1D
 from keras.layers import Flatten
+from keras.layers import RepeatVector
+from keras.layers import TimeDistributed
 from keras.optimizers import RMSprop
 import random
 import numpy as np
@@ -71,12 +73,17 @@ def lstm_model_create(n_neurons, n_steps, n_features, n_future):
     #model.compile(optimizer='adam', loss='mse')
     # define model
     model = Sequential()
-    model.add(Conv1D(filters=64, kernel_size=2, activation='relu', input_shape=(n_steps, n_features)))
+    model.add(Conv1D(filters=64, kernel_size=3, activation='relu', input_shape=(n_steps, n_features)))
     model.add(MaxPooling1D(pool_size=2))
     model.add(Flatten())
-    model.add(Dense(300, activation='relu'))
-    model.add(Dense(n_future, activation='softplus'))
-    model.compile(optimizer='adam', loss='mse')
+    model.add(RepeatVector(n_future))
+    model.add(LSTM(n_neurons, return_sequences=True))
+    model.add(LSTM(second_layer_neurons))
+    #model.add(Dense(300, activation='relu'))
+    model.add(TimeDistributed(Dense(16, activation='tanh')))
+    model.add(TimeDistributed(Dense(1, activation='relu')))
+    model.compile(optimizer='adam', loss='mse', metrics=['mae', 'mape', 'acc'])
+    #model.summary()
     return model
 
 def lstm_model_train(model, X_learn, Y_learn):

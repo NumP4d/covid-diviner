@@ -45,8 +45,8 @@ print('Hello mister! I\'m your diviner')
 countries = data_reader.european_countries()
 
 #analysed dates
-START_DATE  = date(2020, 2, 1)
-END_DATE    = date(2020, 5, 26)
+START_DATE  = date(2020, 3, 1)
+END_DATE    = date(2020, 6, 8)
 
 
 # Data set splitting for learn as 67%
@@ -56,7 +56,7 @@ SET_SPLIT_THRESHOLD = 0.67
 N_STEPS_BACKWARDS   = 7
 N_STEPS_FORWARD     = 7
 N_FEATURES          = 6
-N_NEURONS           = 32
+N_NEURONS           = 128
 
 date_list   = data_reader.date_set_preparation(START_DATE, END_DATE)
 
@@ -105,7 +105,8 @@ for country in countries:
     # Prepare model, train it and make test prediction
     model = predictor.lstm_model_create(N_NEURONS, N_STEPS_BACKWARDS, N_FEATURES, N_STEPS_FORWARD)
     X = X.reshape((X.shape[0], X.shape[1], N_FEATURES))
-    model.fit(X, Y, epochs=200, verbose=0)
+    #Y = Y.reshape((Y.shape[0], Y.shape[1], 1))
+    model.fit(X, Y, epochs=100, verbose=0)
     # Data for prediction for future
     X_pred = np.array(X[-1, :, :])
     X_pred = X_pred.reshape((1, X_pred.shape[0], N_FEATURES))
