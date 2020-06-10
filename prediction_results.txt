@@ -1,150 +1,150 @@
 Hello mister! I'm your diviner
 Prediction:
 Poland
-Prediction CNN:  26788.0
-Prediction linear:  26723.0
+Prediction CNN:  30759
+Prediction linear:  31056
 Albania
-Prediction CNN:  1249.0
-Prediction linear:  1296.0
+Prediction CNN:  1414
+Prediction linear:  1415
 Andorra
-Prediction CNN:  882.0
-Prediction linear:  863.0
+Prediction CNN:  865
+Prediction linear:  852
 Armenia
-Prediction CNN:  14011.0
-Prediction linear:  12433.0
+Prediction CNN:  19533
+Prediction linear:  17641
 Austria
-Prediction CNN:  16936.0
-Prediction linear:  16965.0
+Prediction CNN:  17418
+Prediction linear:  17241
 Azerbaijan
-Prediction CNN:  7723.0
-Prediction linear:  7526.0
+Prediction CNN:  11097
+Prediction linear:  10498
 Belarus
-Prediction CNN:  50522.0
-Prediction linear:  50485.0
+Prediction CNN:  56255
+Prediction linear:  56349
 Belgium
-Prediction CNN:  59442.0
-Prediction linear:  59859.0
+Prediction CNN:  60220
+Prediction linear:  60397
 Bosnia and Herzegovina
-Prediction CNN:  2626.0
-Prediction linear:  2652.0
+Prediction CNN:  3093
+Prediction linear:  2896
 Bulgaria
-Prediction CNN:  2639.0
-Prediction linear:  2622.0
+Prediction CNN:  3264
+Prediction linear:  3250
 Croatia
-Prediction CNN:  2252.0
-Prediction linear:  2248.0
+Prediction CNN:  2254
+Prediction linear:  2247
 Cyprus
-Prediction CNN:  965.0
-Prediction linear:  964.0
+Prediction CNN:  996
+Prediction linear:  988
 Czechia
-Prediction CNN:  9598.0
-Prediction linear:  9665.0
+Prediction CNN:  10065
+Prediction linear:  10101
 Denmark
-Prediction CNN:  11995.0
-Prediction linear:  12050.0
+Prediction CNN:  12219
+Prediction linear:  12279
 Estonia
-Prediction CNN:  1895.0
-Prediction linear:  1909.0
+Prediction CNN:  2001
+Prediction linear:  2037
 Finland
-Prediction CNN:  7117.0
-Prediction linear:  7149.0
+Prediction CNN:  7101
+Prediction linear:  7162
 France
-Prediction CNN:  186314.0
-Prediction linear:  192127.0
+Prediction CNN:  197740
+Prediction linear:  187283
 Georgia
-Prediction CNN:  843.0
-Prediction linear:  882.0
+Prediction CNN:  858
+Prediction linear:  836
 Greece
-Prediction CNN:  2978.0
-Prediction linear:  2962.0
+Prediction CNN:  3122
+Prediction linear:  3201
 Hungary
-Prediction CNN:  4064.0
-Prediction linear:  4061.0
+Prediction CNN:  4091
+Prediction linear:  4132
 Iceland
-Prediction CNN:  1806.0
-Prediction linear:  1807.0
+Prediction CNN:  1808
+Prediction linear:  1808
 Ireland
-Prediction CNN:  25281.0
-Prediction linear:  25418.0
+Prediction CNN:  25334
+Prediction linear:  25345
 Italy
-Prediction CNN:  235768.0
-Prediction linear:  236358.0
+Prediction CNN:  237152
+Prediction linear:  237635
 Kazakhstan
-Prediction CNN:  15212.0
-Prediction linear:  14415.0
+Prediction CNN:  14410
+Prediction linear:  14293
 Latvia
-Prediction CNN:  1088.0
-Prediction linear:  1083.0
+Prediction CNN:  1107
+Prediction linear:  1101
 Liechtenstein
-Prediction CNN:  82.0
-Prediction linear:  82.0
+Prediction CNN:  82
+Prediction linear:  82
 Lithuania
-Prediction CNN:  1728.0
-Prediction linear:  1725.0
+Prediction CNN:  1753
+Prediction linear:  1781
 Luxembourg
-Prediction CNN:  4042.0
-Prediction linear:  4043.0
+Prediction CNN:  4062
+Prediction linear:  4070
 Malta
-Prediction CNN:  648.0
-Prediction linear:  628.0
+Prediction CNN:  659
+Prediction linear:  644
 Moldova
-Prediction CNN:  9756.0
-Prediction linear:  9722.0
+Prediction CNN:  11440
+Prediction linear:  11486
 Monaco
-Prediction CNN:  99.0
-Prediction linear:  100.0
+Prediction CNN:  99
+Prediction linear:  99
 Montenegro
-Prediction CNN:  324.0
-Prediction linear:  324.0
+Prediction CNN:  324
+Prediction linear:  324
 Netherlands
-Prediction CNN:  47293.0
-Prediction linear:  47727.0
+Prediction CNN:  48932
+Prediction linear:  49313
 North Macedonia
-Prediction CNN:  2737.0
-Prediction linear:  2773.0
+Prediction CNN:  4445
+Prediction linear:  4159
 Norway
-Prediction CNN:  8502.0
-Prediction linear:  8519.0
+Prediction CNN:  8660
+Prediction linear:  8686
 Portugal
-Prediction CNN:  34255.0
-Prediction linear:  34865.0
+Prediction CNN:  37266
+Prediction linear:  37667
 Romania
-Prediction CNN:  20424.0
-Prediction linear:  20616.0
+Prediction CNN:  21823
+Prediction linear:  22046
 Russia
-Prediction CNN:  487291.0
-Prediction linear:  484716.0
+Prediction CNN:  543377
+Prediction linear:  546612
 San Marino
-Prediction CNN:  682.0
-Prediction linear:  676.0
+Prediction CNN:  709
+Prediction linear:  702
 Serbia
-Prediction CNN:  11610.0
-Prediction linear:  11677.0
+Prediction CNN:  12417
+Prediction linear:  12502
 Slovakia
-Prediction CNN:  1538.0
-Prediction linear:  1529.0
+Prediction CNN:  1533
+Prediction linear:  1537
 Slovenia
-Prediction CNN:  1477.0
-Prediction linear:  1477.0
+Prediction CNN:  1499
+Prediction linear:  1499
 Spain
-Prediction CNN:  242880.0
-Prediction linear:  244214.0
+Prediction CNN:  243635
+Prediction linear:  243931
 Sweden
-Prediction CNN:  42604.0
-Prediction linear:  42529.0
+Prediction CNN:  53511
+Prediction linear:  52061
 Switzerland
-Prediction CNN:  30942.0
-Prediction linear:  31006.0
+Prediction CNN:  31056
+Prediction linear:  31100
 Turkey
-Prediction CNN:  170746.0
-Prediction linear:  172422.0
+Prediction CNN:  177959
+Prediction linear:  178640
 Ukraine
-Prediction CNN:  30905.0
-Prediction linear:  28415.0
+Prediction CNN:  31952
+Prediction linear:  32213
 United Kingdom
-Prediction CNN:  289242.0
-Prediction linear:  290708.0
+Prediction CNN:  299410
+Prediction linear:  299708
 Holy See
-Prediction CNN:  12.0
-Prediction linear:  12.0
+Prediction CNN:  12
+Prediction linear:  12
 Done!

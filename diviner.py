@@ -15,7 +15,7 @@ countries = data_reader.european_countries()
 
 #analysed dates
 START_DATE  = date(2020, 4, 1)
-END_DATE    = date(2020, 6, 2)
+END_DATE    = date(2020, 6, 9)
 
 # Data set splitting for learn as 67%
 SET_SPLIT_THRESHOLD = 0.67
@@ -48,6 +48,9 @@ for country in countries:
     X_pred = X_pred.reshape((1, X_pred.shape[0], N_FEATURES))
     Y_predict = model.predict(X_pred, verbose=0)
 
+    # Prune all negative values to 0
+    Y_predict = Y_predict.clip(min=0)
+
     # Plot results
     dataset = covid_data[country]
     last_value = dataset[-1]
@@ -78,13 +81,13 @@ for country in countries:
     plt.plot(t1, dataset, 'b.')
     plt.plot(t2, prediction, 'r.')
     plt.plot(t2, pred_linear, 'g.')
-    #plt.show()
+    plt.show()
     dataset = np.diff(covid_data[country])
     prediction2 = Y_predict
     t1 = t1[1:]
     plt.plot(t1, dataset, 'b.')
     plt.plot(t2, prediction2, 'r.')
-    #plt.show()
+    plt.show()
 
     print('Prediction CNN: ', prediction[-1])
     print('Prediction linear: ', pred_linear[-1])
