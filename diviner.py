@@ -45,8 +45,8 @@ print('Hello mister! I\'m your diviner')
 countries = data_reader.european_countries()
 
 #analysed dates
-START_DATE  = date(2020, 2, 1)
-END_DATE    = date(2020, 5, 26)
+START_DATE  = date(2020, 4, 1)
+END_DATE    = date(2020, 6, 14)
 
 # Model parameters
 N_STEPS_BACKWARDS   = 7
@@ -54,69 +54,53 @@ N_STEPS_FORWARD     = 7
 N_FEATURES          = 6
 N_NEURONS           = 32
 
+N_MONTE_CARLO       = 5
+
 # Choose model
-model = 'neural_network'
-#model = 'linear'
+model_type = 'neural_network'
+#model_type = 'linear'
 
 date_list   = data_reader.date_set_preparation(START_DATE, END_DATE)
 
 (cases_c, cases_d, cases_r) = data_reader.read_covid_file(countries, date_list)
 
-# Dataset creation and splitting - all for training set
-(X_learn, Y_learn, X_test, Y_test)                              \
-    = predictor.create_countries_train_test_set                 \
-    (countries, cases_c, cases_d, cases_r, 1, \
-    N_STEPS_BACKWARDS, N_STEPS_FORWARD)
-
-if (model == 'neural_network'):
-    # Model creation and training
-    model = predictor.lstm_model_create(N_NEURONS, N_STEPS_BACKWARDS, N_FEATURES, N_STEPS_FORWARD)
-    model.fit(X_learn, Y_learn, epochs=200, verbose=1)
-
-# Create set for prediction for future only
-X_predict = predictor.create_countries_predition_set            \
-    (countries, cases_c, cases_d, cases_r, N_STEPS_BACKWARDS)
-
-Y_predict   = dict()
 acc_predict = dict()
 for country in countries:
-    print(country)
+    # Dataset creation and splitting - all for training set
+    (X_learn, Y_learn, X_test, Y_test)              \
+        = predictor.create_country_train_test_set   \
+        (country, cases_c, cases_d, cases_r,        \
+        N_STEPS_BACKWARDS, N_STEPS_FORWARD)
 
-    # Model prediction for country
-    Y_predict[country] = model.predict(X_predict[country], verbose=0)
-    # Limit values in prediction
-    Y_predict[country] = Y_predict[country].clip(min=0)
+    acc_predict[country] = 0
+    for i in range(N_MONTE_CARLO):
+        if (model_type == 'neural_network'):
+            # Model creation and training for 7 days ahead accumulated
+            model = predictor.lstm_model_create(N_NEURONS, N_STEPS_BACKWARDS, N_FEATURES, 1)
+            model.fit(X_learn, Y_learn, epochs=100, verbose=0)
 
-    # Translate prediction for absolute value 7 days in future (accumulated)
-    acc_predict[country] = predictor.translate_prediction   \
-        (X_predict[country], Y_predict[country])
+        # Model prediction for country
+        Y_predict = model.predict(X_test, verbose=0)
+        # Limit values in prediction
+        Y_predict = Y_predict.clip(min=0)
 
-    # Round accumulated prediction
-    acc_predict[country] = np.round(acc_predict[country])
+        # Translate prediction for absolute value 7 days in future (accumulated)
+        predict_value = predictor.translate_prediction   \
+            (X_test, Y_predict)
 
-    # Calculate prediction for future
-    last_value = X_predict[country][0, -1, 3]
-    prediction_points = np.zeros(N_STEPS_FORWARD)
-    Y_predict[country] = Y_predict[country].flatten()
-    for i in range(N_STEPS_FORWARD):
-        prediction_points[i] = last_value + Y_predict[country][i]
+        # Round accumulated prediction
+        predict_value = np.round(predict_value)
 
-    # Plot prediction results
-    t1 = np.zeros_like(cases_c[country])
-    for i in range(len(cases_c[country])):
-        t1[i] = i
+        # Calculate real value for calculating quality factor
+        real_value = predictor.translate_prediction     \
+            (X_test, Y_test)
 
-    t2 = np.zeros(len(Y_predict[country]))
-    t2[0] = t1[-1] + 1
-    for i in range(len(Y_predict[country])):
-        if i != 0:
-            t2[i] = t2[i - 1] + 1
+        acc_predict[country] += sum(np.abs(predict_value - real_value) / real_value) * 100 / 5
 
-    # Plot results
-    plt.plot(t1, cases_c[country], 'b.')
-    plt.plot(t2, prediction_points, 'r.')
-    plt.show()
+    acc_predict[country] /= N_MONTE_CARLO
 
-    print(acc_predict[country])
+    print("Mean accuracy for ", country, ": ", acc_predict[country], "%")
 
-print("Done!")
+model_quality = sum(acc_predict.values()) / len(acc_predict)
+
+print("Model quality prediction: ", model_quality, "%")

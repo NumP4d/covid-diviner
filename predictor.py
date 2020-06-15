@@ -57,6 +57,7 @@ def split_sequence(sequence, n_steps_backward, n_steps_forward):
         # gather input and output parts of the pattern
         seq_x = sequence[i:(end_ix - n_steps_forward)]
         seq_y = sequence[(end_ix - n_steps_forward):end_ix]
+        seq_y = np.sum(seq_y)
         X.append(seq_x)
         Y.append(seq_y)
     return np.array(X), np.array(Y)
@@ -71,6 +72,54 @@ def create_train_test_set(X, Y, probability_threshold):
         else:
             i_test.append(i)
     return X[i_learn], Y[i_learn], X[i_test], Y[i_test]
+
+def create_country_train_test_set(country, cases_c, cases_d, cases_r, N_STEPS_BACKWARDS, N_STEPS_FORWARD):
+    N_FEATURES = 6
+    # Dataset preparation
+    X_learn = []
+    Y_learn = []
+    X_test  = []
+    Y_test  = []
+    # Differentiate signal
+    dataset_c   = np.diff(cases_c[country])
+    dataset_d   = np.diff(cases_d[country])
+    dataset_r   = np.diff(cases_r[country])
+    dataset_ca  = cases_c[country][1:]
+    dataset_da  = cases_d[country][1:]
+    dataset_ra  = cases_r[country][1:]
+    # Diff values
+    X_c, Y_c = split_sequence(dataset_c, N_STEPS_BACKWARDS, N_STEPS_FORWARD)
+    X_d, _   = split_sequence(dataset_d, N_STEPS_BACKWARDS, N_STEPS_FORWARD)
+    X_r, _   = split_sequence(dataset_r, N_STEPS_BACKWARDS, N_STEPS_FORWARD)
+    # Accumulated values
+    X_ca, _  = split_sequence(dataset_ca, N_STEPS_BACKWARDS, N_STEPS_FORWARD)
+    X_da, _  = split_sequence(dataset_da, N_STEPS_BACKWARDS, N_STEPS_FORWARD)
+    X_ra, _  = split_sequence(dataset_ra, N_STEPS_BACKWARDS, N_STEPS_FORWARD)
+    # Reshape to 3D signals
+    X_c = X_c.reshape((X_c.shape[0], X_c.shape[1], 1))
+    X_d = X_d.reshape((X_d.shape[0], X_d.shape[1], 1))
+    X_r = X_r.reshape((X_r.shape[0], X_r.shape[1], 1))
+    X_ca = X_ca.reshape((X_ca.shape[0], X_ca.shape[1], 1))
+    X_da = X_da.reshape((X_da.shape[0], X_da.shape[1], 1))
+    X_ra = X_ra.reshape((X_ra.shape[0], X_ra.shape[1], 1))
+    # Build one huge 3D array of super-hyper-parameters for CNN
+    X = np.concatenate((X_c, X_d, X_r, X_ca, X_da, X_ra), axis=2)
+    # Output (response) is diff values of confirmed cases
+    Y = Y_c
+
+    # Split country to training set and test set
+    TESTING_LAST_ITEMS = 5
+
+    X_learn = X[:-TESTING_LAST_ITEMS]
+    Y_learn = Y[:-TESTING_LAST_ITEMS]
+    X_test  = X[-TESTING_LAST_ITEMS:]
+    Y_test  = Y[-TESTING_LAST_ITEMS:]
+
+    # Datasets reshaping
+    X_learn = X_learn.reshape((X_learn.shape[0], X_learn.shape[1], N_FEATURES))
+    X_test  = X_test.reshape((X_test.shape[0], X_test.shape[1], N_FEATURES))
+
+    return X_learn, Y_learn, X_test, Y_test
 
 def create_countries_train_test_set(countries, cases_c, cases_d, cases_r, probability_threshold, N_STEPS_BACKWARDS, N_STEPS_FORWARD):
     N_FEATURES = 6
@@ -170,13 +219,13 @@ def create_countries_predition_set(countries, cases_c, cases_d, cases_r, N_STEPS
     return X_predict
 
 def translate_prediction(X, Y_predict):
+    #Y_predict  = np.array([Y_predict])
     prediction = np.zeros(len(Y_predict))
     for i in range(len(Y_predict)):
         c_last_acc      = X[i, -1, 3]
         prediction[i]   = c_last_acc + np.sum(Y_predict[i])
 
     return prediction
-
 
 # Create neural network model and train it
 def lstm_model_create(n_neurons, n_steps, n_features, n_future):
