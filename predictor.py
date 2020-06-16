@@ -121,6 +121,65 @@ def create_country_train_test_set(country, cases_c, cases_d, cases_r, N_STEPS_BA
 
     return X_learn, Y_learn, X_test, Y_test
 
+def create_country_prediction_set(country, cases_c, cases_d, cases_r, N_STEPS_BACKWARDS, N_STEPS_FORWARD):
+    N_FEATURES = 6
+    # Dataset preparation
+    X_learn     = []
+    Y_learn     = []
+    X_predict   = []
+    # Differentiate signal
+    dataset_c   = np.diff(cases_c[country])
+    dataset_d   = np.diff(cases_d[country])
+    dataset_r   = np.diff(cases_r[country])
+    dataset_ca  = cases_c[country][1:]
+    dataset_da  = cases_d[country][1:]
+    dataset_ra  = cases_r[country][1:]
+    # Diff values
+    X_c, Y_c = split_sequence(dataset_c, N_STEPS_BACKWARDS, N_STEPS_FORWARD)
+    X_d, _   = split_sequence(dataset_d, N_STEPS_BACKWARDS, N_STEPS_FORWARD)
+    X_r, _   = split_sequence(dataset_r, N_STEPS_BACKWARDS, N_STEPS_FORWARD)
+    # Accumulated values
+    X_ca, _  = split_sequence(dataset_ca, N_STEPS_BACKWARDS, N_STEPS_FORWARD)
+    X_da, _  = split_sequence(dataset_da, N_STEPS_BACKWARDS, N_STEPS_FORWARD)
+    X_ra, _  = split_sequence(dataset_ra, N_STEPS_BACKWARDS, N_STEPS_FORWARD)
+    # Reshape to 3D signals
+    X_c = X_c.reshape((X_c.shape[0], X_c.shape[1], 1))
+    X_d = X_d.reshape((X_d.shape[0], X_d.shape[1], 1))
+    X_r = X_r.reshape((X_r.shape[0], X_r.shape[1], 1))
+    X_ca = X_ca.reshape((X_ca.shape[0], X_ca.shape[1], 1))
+    X_da = X_da.reshape((X_da.shape[0], X_da.shape[1], 1))
+    X_ra = X_ra.reshape((X_ra.shape[0], X_ra.shape[1], 1))
+    # Build one huge 3D array of super-hyper-parameters for CNN
+    X_learn = np.concatenate((X_c, X_d, X_r, X_ca, X_da, X_ra), axis=2)
+    # Output (response) is diff values of confirmed cases
+    Y_learn = Y_c
+
+    # Datasets reshaping
+    X_learn = X_learn.reshape((X_learn.shape[0], X_learn.shape[1], N_FEATURES))
+
+    # Diff values
+    X_c = dataset_c[-N_STEPS_BACKWARDS:]
+    X_d = dataset_d[-N_STEPS_BACKWARDS:]
+    X_r = dataset_r[-N_STEPS_BACKWARDS:]
+    # Accumulated values
+    X_ca = dataset_ca[-N_STEPS_BACKWARDS:]
+    X_da = dataset_da[-N_STEPS_BACKWARDS:]
+    X_ra = dataset_ra[-N_STEPS_BACKWARDS:]
+
+    # Reshape to 3D signals
+    X_c = X_c.reshape((1, X_c.shape[0], 1))
+    X_d = X_d.reshape((1, X_d.shape[0], 1))
+    X_r = X_r.reshape((1, X_r.shape[0], 1))
+    X_ca = X_ca.reshape((1, X_ca.shape[0], 1))
+    X_da = X_da.reshape((1, X_da.shape[0], 1))
+    X_ra = X_ra.reshape((1, X_ra.shape[0], 1))
+
+    # Build one huge 2D array of super-hyper-parameters for CNN
+    X = np.concatenate((X_c, X_d, X_r, X_ca, X_da, X_ra), axis=2)
+    X_predict = X.reshape((X.shape[0], X.shape[1], N_FEATURES))
+
+    return X_learn, Y_learn, X_predict
+
 def create_countries_train_test_set(countries, cases_c, cases_d, cases_r, probability_threshold, N_STEPS_BACKWARDS, N_STEPS_FORWARD):
     N_FEATURES = 6
     # Dataset preparation
@@ -244,7 +303,7 @@ def lstm_model_create(n_neurons, n_steps, n_features, n_future):
     model.add(Conv1D(filters=64, kernel_size=2, activation='relu', input_shape=(n_steps, n_features)))
     model.add(MaxPooling1D(pool_size=2))
     model.add(Flatten())
-    model.add(Dense(50 * n_features, activation='relu'))
+    model.add(Dense(70 * n_features, activation='relu'))
     model.add(Dense(n_future, activation='softplus'))
     model.compile(optimizer='adam', loss='mse')
     return model
